@@ -27,7 +27,14 @@ public class UserService {
     }
 
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
-        User user = userMapper.toEntity(userRequestDTO);
+
+        String trimmedUsername = userRequestDTO.username().trim();
+        String trimmedPassword = userRequestDTO.password().trim();
+        String trimmedEmail = userRequestDTO.email().trim();
+
+        UserRequestDTO trimmedDTO = new UserRequestDTO(trimmedUsername, trimmedPassword, trimmedEmail);
+
+        User user = userMapper.toEntity(trimmedDTO);
         LocalDateTime now = LocalDateTime.now();
         user.setCreatedAt(now);
         user.setUpdatedAt(now);

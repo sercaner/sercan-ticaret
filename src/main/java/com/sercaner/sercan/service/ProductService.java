@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +29,14 @@ public class ProductService {
     }
 
     public ProductResponseDTO createProduct(@Valid ProductRequestDTO productRequestDTO) {
-        Product product = productMapper.toEntity(productRequestDTO);
+
+        String trimmedName = productRequestDTO.name().trim();
+        String trimmedDescription = productRequestDTO.description().trim();
+        Double trimmedPrice = productRequestDTO.price(); // directly use double
+        Integer trimmedStock = productRequestDTO.stock();
+        ProductRequestDTO trimmedDTO = new ProductRequestDTO(trimmedName, trimmedDescription, trimmedPrice, trimmedStock);
+
+        Product product = productMapper.toEntity(trimmedDTO);
         LocalDateTime now = LocalDateTime.now();
         product.setCreatedAt(now);
         product.setUpdatedAt(now);
